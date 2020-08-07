@@ -14,7 +14,7 @@ __copyright__ = 'Copyright 2020, Aleksandr Prazdnikov'
 
 import unittest
 
-from gui.gis_tools_dockwidget import GisToolsDockWidget
+from gis_tools_gui.gis_tools_dockwidget import GisToolsDockWidget
 
 from utilities import get_qgis_app
 

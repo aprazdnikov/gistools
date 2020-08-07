@@ -27,7 +27,7 @@ from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, Qt
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QMenu
 
-from gui.gis_tools_dockwidget import GisToolsDockWidget
+from gis_tools_gui.gis_tools_dockwidget import GisToolsDockWidget
 
 
 class GisTools:
@@ -94,7 +94,7 @@ class GisTools:
         :rtype: QString
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
-        return QCoreApplication.translate('GisTools', message)
+        return QCoreApplication.translate(__class__.__name__, message)
 
     def add_action(self, icon_path, text, callback, enabled_flag=True,
                    add_to_menu=True, add_to_toolbar=True, status_tip=None,

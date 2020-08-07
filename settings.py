@@ -23,7 +23,7 @@
 import os
 
 
-DEBUG = True
+DEBUG = False
 
 PATH_PYDEVD = {
     'win32': os.environ.get('PYDEVD'),
@@ -49,6 +49,7 @@ SYS_PATH = (
     PATH_PLUGIN,
     f'{PATH_PLUGIN}/gui',
     f'{PATH_PLUGIN}/apps',
+    f'{PATH_PLUGIN}/libs',
 )
 
 ICON = f'{PATH_PLUGIN}/icon.png'

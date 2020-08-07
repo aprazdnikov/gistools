@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- GisToolsDockWidget
                                  A QGIS plugin
  Gis simple tools
                              -------------------
@@ -20,31 +19,15 @@
  *                                                                         *
  ***************************************************************************/
 """
-
-import os
-
-from qgis.PyQt import QtWidgets, uic
-from qgis.PyQt.QtCore import pyqtSignal
-
-from apps import gpx_to_tab
-
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'gis_tools_dockwidget_base.ui'))
+from gis_tools_libs.messages import MessageStatusBar
 
 
-class GisToolsDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
+class ProcessingGPXtoTAB:
+    def __init__(self):
+        self.status = MessageStatusBar()
+        self.l_points = ''
+        self.l_polylines = ''
+        self.l_polygons = ''
 
-    closingPlugin = pyqtSignal()
-
-    def __init__(self, parent=None):
-        super(GisToolsDockWidget, self).__init__(parent)
-        self.setupUi(self)
-
-        self.gpxTab.clicked.connect(self._run_gpx_to_tab)
-
-    def _run_gpx_to_tab(self):
-        gpx_to_tab.show(self)
-
-    def closeEvent(self, event):
-        self.closingPlugin.emit()
-        event.accept()
+    def handle_gpx(self, data):
+        pass

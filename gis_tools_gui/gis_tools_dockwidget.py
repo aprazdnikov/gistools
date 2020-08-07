@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- GpxTabDialog
+ GisToolsDockWidget
                                  A QGIS plugin
  Gis simple tools
                              -------------------
@@ -23,39 +23,29 @@
 
 import os
 
-from qgis.PyQt import uic
+from qgis.PyQt import QtWidgets, uic
+from qgis.PyQt.QtCore import pyqtSignal
+
+from gis_tools_apps import gpx_to_tab
+
+FORM_CLASS, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'gis_tools_dockwidget_base.ui'))
 
 
-FORM_CLASS, BASE = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'gpx_tab_dialog.ui'))
+class GisToolsDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
+    closingPlugin = pyqtSignal()
 
-class GpxTabDialog(BASE, FORM_CLASS):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super(GisToolsDockWidget, self).__init__(parent)
         self.setupUi(self)
 
-        self.btnAll.setDisabled(True)
-        self.btnSelect.setDisabled(True)
-
-        self.btnFolder.clicked.connect(self._select_folder)
-        self.btnAll.clicked.connect(self._processing_all)
-        self.btnSelect.clicked.connect(self._processing_select)
-        self.btnCancel.clicked.connect(self.accept)
-
-        self.exec_()
+        self.gpxTab.clicked.connect(self._run_gpx_to_tab)
 
     @staticmethod
-    def _select_folder():
-        pass
-
-    @staticmethod
-    def _processing_all():
-        pass
-
-    @staticmethod
-    def _processing_select():
-        pass
+    def _run_gpx_to_tab():
+        gpx_to_tab.show()
 
     def closeEvent(self, event):
+        self.closingPlugin.emit()
         event.accept()
