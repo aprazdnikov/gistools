@@ -25,5 +25,5 @@ from gis_tools_gui.gis_tools_gpx_tab_dialog import GpxTabDialog
 
 
 class GpxToTab(object):
-    def __init__(self):
-        self.dialog = GpxTabDialog()
+    def __init__(self, parent):
+        self.dialog = GpxTabDialog(parent)

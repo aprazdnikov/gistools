@@ -22,6 +22,7 @@
 """
 
 import os
+import weakref
 
 from qgis.PyQt import QtWidgets, uic
 from qgis.PyQt.QtCore import pyqtSignal
@@ -36,15 +37,15 @@ class GisToolsDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
     closingPlugin = pyqtSignal()
 
-    def __init__(self, parent=None):
+    def __init__(self, gis_tools, parent=None):
         super(GisToolsDockWidget, self).__init__(parent)
         self.setupUi(self)
+        self.gis_tools = weakref.ref(gis_tools)
 
         self.gpxTab.clicked.connect(self._run_gpx_to_tab)
 
-    @staticmethod
-    def _run_gpx_to_tab():
-        gpx_to_tab.show()
+    def _run_gpx_to_tab(self):
+        gpx_to_tab.show(self.gis_tools)
 
     def closeEvent(self, event):
         self.closingPlugin.emit()

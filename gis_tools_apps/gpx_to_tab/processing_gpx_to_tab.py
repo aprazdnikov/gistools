@@ -19,15 +19,142 @@
  *                                                                         *
  ***************************************************************************/
 """
+import os
+
+from qgis.core import (
+    QgsVectorLayer, QgsGeometry, QgsPointXY, QgsField, QgsFeature, QgsPoint,
+    QgsProject, QgsVectorFileWriter, QgsMessageLog, Qgis
+)
+from qgis.PyQt.QtCore import QVariant
+
+from gis_tools_libs import gpxpy
 from gis_tools_libs.messages import MessageStatusBar
+
+_TIME = 'time'
+_NAME = 'name'
 
 
 class ProcessingGPXtoTAB:
-    def __init__(self):
-        self.status = MessageStatusBar()
-        self.l_points = ''
-        self.l_polylines = ''
-        self.l_polygons = ''
+    def __init__(self, folder, iface):
+        # TODO: Поставить статус выполнения
+        #  self.status = MessageStatusBar()
+        self.iface = iface
+        self.folder = f'{folder}/mapinfo'
+        if not os.path.exists(self.folder):
+            os.mkdir(self.folder)
+
+        self.mi_points = QgsVectorLayer('Point', 'mi_points', 'memory')
+        self.mi_points.dataProvider().addAttributes(
+            [QgsField(_NAME, QVariant.String)])
+        self.mi_points.dataProvider().addAttributes(
+            [QgsField(_TIME, QVariant.String)])
+        self.mi_points.updateFields()
+
+        self.mi_tracks = QgsVectorLayer('LineString', 'mi_tracks', 'memory')
+        self.mi_tracks.dataProvider().addAttributes(
+            [QgsField(_NAME, QVariant.String)])
+        self.mi_tracks.dataProvider().addAttributes(
+            [QgsField(_TIME, QVariant.String)])
+        self.mi_tracks.updateFields()
+
+        self.mi_routes = QgsVectorLayer('LineString', 'mi_routes', 'memory')
+        self.mi_routes.dataProvider().addAttributes(
+            [QgsField(_NAME, QVariant.String)])
+        self.mi_routes.dataProvider().addAttributes(
+            [QgsField(_TIME, QVariant.String)])
+        self.mi_routes.updateFields()
 
     def handle_gpx(self, data):
-        pass
+        for name, gpx in self._get_gpx(data):
+
+            for waypoint in gpx.waypoints:
+                self._handle_points(waypoint, name, self.mi_points)
+
+            for track in gpx.tracks:
+                self._handle_tracks_and_routes(track, name, self.mi_tracks)
+
+            for route in gpx.routes:
+                self._handle_tracks_and_routes(route, name, self.mi_routes)
+
+        self._save_to_files()
+        self.iface.messageBar().pushMessage(
+            'GPX -> MapInfo TAB', 'Handle complete', Qgis.Success)
+
+    def _handle_points(self, point, name, layer):
+        features = []
+        name, time, geom = self._get_geometry_waypoint(point, name)
+        features = self._prepare_features(
+            layer.fields(), name, time, geom, features)
+        layer.dataProvider().addFeatures(features)
+
+    def _handle_tracks_and_routes(self, part, name, layer):
+        features = []
+        name, time, geoms = self._get_geometry_track(part, name)
+        for geom in geoms:
+            features = self._prepare_features(
+                layer.fields(), name, time, geom, features)
+            layer.dataProvider().addFeatures(features)
+
+    def _save_to_files(self):
+        if self.mi_points.featureCount():
+            self.__save(self.mi_points)
+
+        if self.mi_tracks.featureCount():
+            self.__save(self.mi_tracks)
+
+        if self.mi_routes.featureCount():
+            self.__save(self.mi_routes)
+
+    def __save(self, layer):
+        tc = QgsProject.instance().transformContext()
+        options = QgsVectorFileWriter.SaveVectorOptions()
+        options.driverName = 'MapInfo File'
+        options.actionOnExistingFile = \
+            QgsVectorFileWriter.CreateOrOverwriteFile
+        options.layerName = layer.name()
+
+        file = f'{self.folder}/{layer.name()}.tab'
+
+        result = QgsVectorFileWriter.writeAsVectorFormatV2(
+            layer=layer, fileName=file, transformContext=tc,
+            options=options
+        )
+        if not result[0] == QgsVectorFileWriter.NoError:
+            QgsMessageLog.logMessage(result[1], "Gis Tools")
+
+    @staticmethod
+    def _get_geometry_waypoint(data, name):
+        name = data.name if data.name else name
+        time = str(data.time)
+        geom = QgsGeometry.fromPointXY(
+            QgsPointXY(data.longitude, data.latitude)
+        )
+        return name, time, geom
+
+    @staticmethod
+    def _get_geometry_track(data, name):
+        name = data.name if data.name else name
+        time = None
+        geom = []
+        for segment in data.segments:
+            time = str(segment.points[0].time)
+            points = [QgsPoint(point.longitude, point.latitude)
+                      for point in segment.points]
+            geom.append(QgsGeometry.fromPolyline(points))
+
+        return name, time, geom
+
+    @staticmethod
+    def _prepare_features(fields, name, time, geom, features):
+        feat = QgsFeature(fields)
+        feat.setAttribute(_NAME, name)
+        feat.setAttribute(_TIME, time)
+        feat.setGeometry(geom)
+        features.append(feat)
+        return features
+
+    @staticmethod
+    def _get_gpx(list_data):
+        for file in list_data:
+            with open(file[1], 'r') as file_gpx:
+                yield file[0], gpxpy.parse(file_gpx)

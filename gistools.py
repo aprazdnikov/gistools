@@ -200,7 +200,7 @@ class GisTools:
 
             if not self.dockwidget:
                 # Create the dockwidget (after translation) and keep reference
-                self.dockwidget = GisToolsDockWidget()
+                self.dockwidget = GisToolsDockWidget(self)
 
             # connect to provide cleanup on closing of dockwidget
             self.dockwidget.closingPlugin.connect(self.onClosePlugin)

@@ -23,5 +23,5 @@
 import gis_tools_apps.gpx_to_tab.select_gpx_dialog
 
 
-def show():
-    return select_gpx_dialog.GpxToTab()
+def show(self):
+    return select_gpx_dialog.GpxToTab(self)
