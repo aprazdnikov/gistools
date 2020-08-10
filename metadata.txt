@@ -10,7 +10,7 @@ version=0.1
 author=Aleksandr Prazdnikov
 email=79237017153@ya.ru
 
-about=Provide a brief description of the plugin and its purpose.
+about=The plugin will help simplify your day to day operations, for example: Convert GPX to One MapInfo Tab Layer.
 
 tracker=https://github.com/aprazdnikov/gistools/issues
 repository=https://github.com/aprazdnikov/gistools
