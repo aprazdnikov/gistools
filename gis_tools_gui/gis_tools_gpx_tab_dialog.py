@@ -44,7 +44,6 @@ class GpxTabDialog(_BASE, _FORM_CLASS):
         self.setWindowIcon(QIcon(settings.ICON))
 
         self.gis_tools = parent()
-        self.iface = self.gis_tools.iface
 
         self.btnFolder.setIcon(self._get_icon('search.png'))
         self.btnFolder.setIconSize(QSize(30, 30))
@@ -96,8 +95,15 @@ class GpxTabDialog(_BASE, _FORM_CLASS):
             )
 
     def _processing_all(self):
-        process = ProcessingGPXtoTAB(self.model.folder, self.iface)
-        process.handle_gpx(self.model.rows_data())
+        process = ProcessingGPXtoTAB(self.model.folder, self.gis_tools)
+
+        data_list = []
+        for item in self.model.rows_data():
+            data_list.append(item)
+
+        self.hide()
+        process.handle_gpx(data_list)
+        self.accept()
 
     def _processing_select(self):
         idx_list = self.tableView.selectionModel().selectedRows()
@@ -107,11 +113,15 @@ class GpxTabDialog(_BASE, _FORM_CLASS):
                 self.tr('You must select at least one file from the list')
             )
         else:
-            process = ProcessingGPXtoTAB(self.model.folder, self.iface)
+            self.hide()
+
+            process = ProcessingGPXtoTAB(self.model.folder, self.gis_tools)
             data_list = []
             for item in list(idx_list):
                 data_list.append(self.model.row_data(item))
             process.handle_gpx(data_list)
+
+        self.accept()
 
     @staticmethod
     def _get_icon(name: typing.Text) -> QIcon:

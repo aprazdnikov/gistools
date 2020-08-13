@@ -29,7 +29,7 @@ from qgis.PyQt.QtWidgets import QProgressBar, QLabel
 
 
 class MessageStatusBar(threading.Thread):
-    def __init__(self, title="", msg="In processing", queue_size=1):
+    def __init__(self, title="", msg="", queue_size=1):
         threading.Thread.__init__(self)
         iface.messageBar().clearWidgets()
 
@@ -41,10 +41,10 @@ class MessageStatusBar(threading.Thread):
 
     def run(self):
         while True:
-            # Получаем данные из очереди
+            # Get data from queue
             value = self.pipeline.get()
             self.__set_value_to_progress_bar(value[0], value[1])
-            # Отправляем сигнал о том, что задача завершена
+            # Send emit because task finished
             self.pipeline.task_done()
 
     def __create_status_bar(self):

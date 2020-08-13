@@ -3,16 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to GisTools's documentation!
-============================================
+Library the project
+===================
 
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
-   libs.rst
+   libs_logs.rst
+   libs_messages.rst
 
 Indices and tables
 ==================

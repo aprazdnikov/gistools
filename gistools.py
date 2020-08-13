@@ -28,11 +28,11 @@ from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QMenu
 
 from gis_tools_gui.gis_tools_dockwidget import GisToolsDockWidget
+from gis_tools_libs.logs import Sender
 
 
 class GisTools:
     """QGIS Plugin Implementation."""
-
     def __init__(self, iface):
         """Constructor.
 
@@ -44,6 +44,7 @@ class GisTools:
         # Save reference to the QGIS interface
         self.iface = iface
         self.settings = settings
+        self.log = Sender(self)
 
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)

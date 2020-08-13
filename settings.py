@@ -42,6 +42,7 @@ CONFIG_PYDEVD = {
 
 PATH_LOCAL_DIR = os.path.expanduser("~")
 PATH_LOCAL_DIR_PLUGIN = f'{PATH_LOCAL_DIR}/.gistools'
+PATH_LOGS = f'{PATH_LOCAL_DIR_PLUGIN}/logs'
 
 PATH_PLUGIN = os.path.abspath(os.path.join(__file__, '../'))
 

@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to GisTools's documentation!
-============================================
+Logs
+====
 
 Contents:
 
@@ -12,7 +12,15 @@ Contents:
    :maxdepth: 2
    :caption: Contents:
 
-   libs.rst
+logs.py
+=======
+
+.. automodule:: logs
+    :members:
+    :private-members:
+    :undoc-members:
+    :inherited-members:
+    :show-inheritance:
 
 Indices and tables
 ==================

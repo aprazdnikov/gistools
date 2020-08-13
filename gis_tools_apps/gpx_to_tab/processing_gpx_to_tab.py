@@ -25,7 +25,7 @@ from qgis.core import (
     QgsVectorLayer, QgsGeometry, QgsPointXY, QgsField, QgsFeature, QgsPoint,
     QgsProject, QgsVectorFileWriter, QgsMessageLog, Qgis
 )
-from qgis.PyQt.QtCore import QVariant
+from qgis.PyQt.QtCore import QVariant, QCoreApplication
 
 from gis_tools_libs import gpxpy
 from gis_tools_libs.messages import MessageStatusBar
@@ -35,10 +35,13 @@ _NAME = 'name'
 
 
 class ProcessingGPXtoTAB:
-    def __init__(self, folder, iface):
-        # TODO: Поставить статус выполнения
-        #  self.status = MessageStatusBar()
-        self.iface = iface
+    def __init__(self, folder, parent):
+        self.status = MessageStatusBar()
+        self.status.start()
+
+        self.log = parent.log
+        self.iface = parent.iface
+
         self.folder = f'{folder}/mapinfo'
         if not os.path.exists(self.folder):
             os.mkdir(self.folder)
@@ -65,7 +68,14 @@ class ProcessingGPXtoTAB:
         self.mi_routes.updateFields()
 
     def handle_gpx(self, data):
+        count = len(data)
+        current = 1
+        percent = round((100 / count))
+        success = self.tr("complete")
+
         for name, gpx in self._get_gpx(data):
+            msg = self.tr('Handle %s of %s')
+            self.status.set_value(0, msg % (current, count))
 
             for waypoint in gpx.waypoints:
                 self._handle_points(waypoint, name, self.mi_points)
@@ -76,9 +86,18 @@ class ProcessingGPXtoTAB:
             for route in gpx.routes:
                 self._handle_tracks_and_routes(route, name, self.mi_routes)
 
+            self.status.set_value(percent)
+            current += 1
+
+            self.log.send_message(
+                f'{name} {success}', self.tr('Handle GPX')
+            )
+
         self._save_to_files()
+
+        self.iface.messageBar().clearWidgets()
         self.iface.messageBar().pushMessage(
-            'GPX -> MapInfo TAB', 'Handle complete', Qgis.Success)
+            'GPX -> MapInfo TAB', self.tr('Handle complete'), Qgis.Success)
 
     def _handle_points(self, point, name, layer):
         features = []
@@ -96,14 +115,24 @@ class ProcessingGPXtoTAB:
             layer.dataProvider().addFeatures(features)
 
     def _save_to_files(self):
+
+        self.status.reset()
+        self.status.set_value(0, self.tr('Save to file'))
+
         if self.mi_points.featureCount():
             self.__save(self.mi_points)
+
+        self.status.set_value(30)
 
         if self.mi_tracks.featureCount():
             self.__save(self.mi_tracks)
 
+        self.status.set_value(30)
+
         if self.mi_routes.featureCount():
             self.__save(self.mi_routes)
+
+        self.status.set_value(40)
 
     def __save(self, layer):
         tc = QgsProject.instance().transformContext()
@@ -120,7 +149,7 @@ class ProcessingGPXtoTAB:
             options=options
         )
         if not result[0] == QgsVectorFileWriter.NoError:
-            QgsMessageLog.logMessage(result[1], "Gis Tools")
+            self.log.send_message(result[1], __class__.__name__)
 
     @staticmethod
     def _get_geometry_waypoint(data, name):
@@ -158,3 +187,18 @@ class ProcessingGPXtoTAB:
         for file in list_data:
             with open(file[1], 'r') as file_gpx:
                 yield file[0], gpxpy.parse(file_gpx)
+
+    # noinspection PyMethodMayBeStatic
+    def tr(self, message):
+        """Get the translation for a string using Qt translation API.
+
+        We implement this ourselves since we do not inherit QObject.
+
+        :param message: String for translation.
+        :type message: str, QString
+
+        :returns: Translated version of message.
+        :rtype: QString
+        """
+        # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
+        return QCoreApplication.translate(__class__.__name__, message)
