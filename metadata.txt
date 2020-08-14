@@ -11,9 +11,9 @@ author=Aleksandr Prazdnikov
 email=79237017153@ya.ru
 
 about=The plugin will be help automation of the process of converting several
-GPX format files to MapInfo TAB. Only needs to select the directory with the
-GPX files and start the conversion. Mapinfo directory with data will be created
- in the same directory.
+      GPX format files to MapInfo TAB. Only needs to select the directory with the
+      GPX files and start the conversion. Mapinfo directory with data will be created
+      in the same directory.
 
 tracker=https://github.com/aprazdnikov/gistools/issues
 repository=https://github.com/aprazdnikov/gistools
