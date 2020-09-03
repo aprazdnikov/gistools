@@ -16,12 +16,12 @@
 <context>
     <name>GisTools</name>
     <message>
-        <location filename="../gistools.py" line="72"/>
+        <location filename="../plugin.py" line="72"/>
         <source>Gis Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gistools.py" line="167"/>
+        <location filename="../plugin.py" line="167"/>
         <source>Panel Tools</source>
         <translation type="unfinished"></translation>
     </message>

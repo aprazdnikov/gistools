@@ -21,8 +21,6 @@
  ***************************************************************************/
  This script initializes the plugin, making it known to QGIS.
 """
-import sys
-from . import settings
 
 # noinspection PyPep8Naming
 def classFactory(iface):  # pylint: disable=invalid-name
@@ -32,33 +30,5 @@ def classFactory(iface):  # pylint: disable=invalid-name
     :type iface: QgsInterface
     """
     #
-    if settings.DEBUG:
-
-        if settings.PATH_PYDEVD.get(sys.platform) not in sys.path:
-            sys.path.insert(0, settings.PATH_PYDEVD.get(sys.platform))
-
-        try:
-            import pydevd_pycharm
-            pydevd_pycharm.settrace(
-                settings.CONFIG_PYDEVD['server'],
-                port=settings.CONFIG_PYDEVD['port'],
-                stdoutToServer=settings.CONFIG_PYDEVD['stdout'],
-                stderrToServer=settings.CONFIG_PYDEVD['stderr'],
-                suspend=settings.CONFIG_PYDEVD['suspend']
-            )
-        except ImportError:
-            import pydevd
-            pydevd.settrace(
-                settings.CONFIG_PYDEVD['server'],
-                port=settings.CONFIG_PYDEVD['port'],
-                stdoutToServer=settings.CONFIG_PYDEVD['stdout'],
-                stderrToServer=settings.CONFIG_PYDEVD['stderr'],
-                suspend=settings.CONFIG_PYDEVD['suspend']
-            )
-
-    for __ in settings.SYS_PATH:
-        if __ not in sys.path:
-            sys.path.insert(0, __)
-
-    from .gistools import GisTools
+    from .plugin import GisTools
     return GisTools(iface)

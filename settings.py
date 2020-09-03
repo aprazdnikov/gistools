@@ -23,7 +23,7 @@
 import os
 
 
-DEBUG = False
+DEBUG = True
 
 PATH_PYDEVD = {
     'win32': os.environ.get('PYDEVD'),

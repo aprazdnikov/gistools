@@ -20,13 +20,17 @@
  *                                                                         *
  ***************************************************************************/
 """
+import sys
 import os.path
-import settings
 
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, Qt
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QMenu
 
+from . import settings
+for __ in settings.SYS_PATH:
+    if __ not in sys.path:
+        sys.path.insert(0, __)
 from gis_tools_gui.gis_tools_dockwidget import GisToolsDockWidget
 from gis_tools_libs.logs import Sender
 
@@ -35,12 +39,32 @@ class GisTools:
     """QGIS Plugin Implementation."""
     def __init__(self, iface):
         """Constructor.
-
         :param iface: An interface instance that will be passed to this class
             which provides the hook by which you can manipulate the QGIS
             application at run time.
         :type iface: QgsInterface
         """
+        if settings.DEBUG:
+            if settings.PATH_PYDEVD.get(sys.platform) not in sys.path:
+                sys.path.insert(0, settings.PATH_PYDEVD.get(sys.platform))
+            try:
+                import pydevd_pycharm
+                pydevd_pycharm.settrace(
+                    settings.CONFIG_PYDEVD['server'],
+                    port=settings.CONFIG_PYDEVD['port'],
+                    stdoutToServer=settings.CONFIG_PYDEVD['stdout'],
+                    stderrToServer=settings.CONFIG_PYDEVD['stderr'],
+                    suspend=settings.CONFIG_PYDEVD['suspend']
+                )
+            except ImportError:
+                import pydevd
+                pydevd.settrace(
+                    settings.CONFIG_PYDEVD['server'],
+                    port=settings.CONFIG_PYDEVD['port'],
+                    stdoutToServer=settings.CONFIG_PYDEVD['stdout'],
+                    stderrToServer=settings.CONFIG_PYDEVD['stderr'],
+                    suspend=settings.CONFIG_PYDEVD['suspend']
+                )
         # Save reference to the QGIS interface
         self.iface = iface
         self.settings = settings
