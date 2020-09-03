@@ -19,11 +19,9 @@
  *                                                                         *
  ***************************************************************************/
 """
-import weakref
-
-from gis_tools_gui.gis_tools_gpx_tab_dialog import GpxTabDialog
+from gis_tools_gui.gis_tools_gpx_convert_dialog import GpxConvertDialog
 
 
 class GpxToTab(object):
-    def __init__(self, parent):
-        self.dialog = GpxTabDialog(parent)
+    def __init__(self, parent, out_type):
+        self.dialog = GpxConvertDialog(parent, out_type)

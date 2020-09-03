@@ -34,33 +34,35 @@ _TIME = 'time'
 _NAME = 'name'
 
 
-class ProcessingGPXtoTAB:
-    def __init__(self, folder, parent):
+class ProcessingGPX:
+    def __init__(self, folder: str, parent, out_type: str, driver: str):
         self.status = MessageStatusBar()
         self.status.start()
 
         self.log = parent.log
         self.iface = parent.iface
+        self.out_type = out_type
+        self.driver = driver
 
-        self.folder = f'{folder}/mapinfo'
+        self.folder = f'{folder}/output'
         if not os.path.exists(self.folder):
             os.mkdir(self.folder)
 
-        self.mi_points = QgsVectorLayer('Point', 'mi_points', 'memory')
+        self.mi_points = QgsVectorLayer('Point', 'points', 'memory')
         self.mi_points.dataProvider().addAttributes(
             [QgsField(_NAME, QVariant.String)])
         self.mi_points.dataProvider().addAttributes(
             [QgsField(_TIME, QVariant.String)])
         self.mi_points.updateFields()
 
-        self.mi_tracks = QgsVectorLayer('LineString', 'mi_tracks', 'memory')
+        self.mi_tracks = QgsVectorLayer('LineString', 'tracks', 'memory')
         self.mi_tracks.dataProvider().addAttributes(
             [QgsField(_NAME, QVariant.String)])
         self.mi_tracks.dataProvider().addAttributes(
             [QgsField(_TIME, QVariant.String)])
         self.mi_tracks.updateFields()
 
-        self.mi_routes = QgsVectorLayer('LineString', 'mi_routes', 'memory')
+        self.mi_routes = QgsVectorLayer('LineString', 'routes', 'memory')
         self.mi_routes.dataProvider().addAttributes(
             [QgsField(_NAME, QVariant.String)])
         self.mi_routes.dataProvider().addAttributes(
@@ -97,7 +99,8 @@ class ProcessingGPXtoTAB:
 
         self.iface.messageBar().clearWidgets()
         self.iface.messageBar().pushMessage(
-            'GPX -> MapInfo TAB', self.tr('Handle complete'), Qgis.Success)
+            f'GPX -> {self.out_type}', self.tr('Handle complete'), Qgis.Success
+        )
 
     def _handle_points(self, point, name, layer):
         features = []
@@ -137,12 +140,12 @@ class ProcessingGPXtoTAB:
     def __save(self, layer):
         tc = QgsProject.instance().transformContext()
         options = QgsVectorFileWriter.SaveVectorOptions()
-        options.driverName = 'MapInfo File'
+        options.driverName = self.driver
         options.actionOnExistingFile = \
             QgsVectorFileWriter.CreateOrOverwriteFile
         options.layerName = layer.name()
 
-        file = f'{self.folder}/{layer.name()}.tab'
+        file = f'{self.folder}/{layer.name()}'
 
         result = QgsVectorFileWriter.writeAsVectorFormatV2(
             layer=layer, fileName=file, transformContext=tc,

@@ -27,7 +27,8 @@ import weakref
 from qgis.PyQt import QtWidgets, uic
 from qgis.PyQt.QtCore import pyqtSignal
 
-from gis_tools_apps import gpx_to_tab
+from gis_tools_apps import gpx_convert
+from gis_tools_libs.enums import OUTPUT
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'gis_tools_dockwidget_base.ui'))
@@ -43,9 +44,17 @@ class GisToolsDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.gis_tools = weakref.ref(gis_tools)
 
         self.gpxTab.clicked.connect(self._run_gpx_to_tab)
+        self.gpxKml.clicked.connect(self._run_gpx_to_kml)
+        self.gpxShp.clicked.connect(self._run_gpx_to_shp)
 
     def _run_gpx_to_tab(self):
-        gpx_to_tab.show(self.gis_tools)
+        gpx_convert.show(self.gis_tools, OUTPUT.MAPINFO.TYPE)
+
+    def _run_gpx_to_kml(self):
+        gpx_convert.show(self.gis_tools, OUTPUT.KML.TYPE)
+
+    def _run_gpx_to_shp(self):
+        gpx_convert.show(self.gis_tools, OUTPUT.SHP.TYPE)
 
     def closeEvent(self, event):
         self.closingPlugin.emit()

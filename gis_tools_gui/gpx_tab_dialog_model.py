@@ -68,12 +68,14 @@ class ModelFiles(QAbstractTableModel):
         for row in self.files:
             yield row
 
-    def update(self, path):
+    def update(self, path) -> bool:
         """ Обновление модели и уведомление об этом tableView """
         self.folder = path
         self.removeRows(0, self.rowCount())
         self.__get_projects()
         self.layoutChanged.emit()
+
+        return True if self.files else False
 
     def __get_projects(self) -> None:
         self.files = []

@@ -29,21 +29,25 @@ from PyQt5.QtCore import QCoreApplication, QSize
 from qgis.PyQt import uic
 from qgis.PyQt.QtGui import QIcon
 
-from gis_tools_apps.gpx_to_tab.processing_gpx_to_tab import ProcessingGPXtoTAB
+from gis_tools_libs.enums import OUTPUT
+from gis_tools_apps.gpx_convert.processing_gpx import ProcessingGPX
 from gis_tools_gui.gpx_tab_dialog_model import ModelFiles
 
 
 _FORM_CLASS, _BASE = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'gis_tools_gpx_tab_dialog.ui'))
+    os.path.dirname(__file__), 'gis_tools_gpx_convert_dialog.ui'))
 
 
-class GpxTabDialog(_BASE, _FORM_CLASS):
-    def __init__(self, parent):
+class GpxConvertDialog(_BASE, _FORM_CLASS):
+    def __init__(self, parent, out_type: str):
         super().__init__()
         self.setupUi(self)
         self.setWindowIcon(QIcon(settings.ICON))
+        self.setWindowTitle(self.tr("Converting GPX to ") + out_type)
 
         self.gis_tools = parent()
+        self.out_type = out_type
+        self.driver = OUTPUT.DRIVER.get(out_type)
 
         self.btnFolder.setIcon(self._get_icon('search.png'))
         self.btnFolder.setIconSize(QSize(30, 30))
@@ -52,16 +56,18 @@ class GpxTabDialog(_BASE, _FORM_CLASS):
 
         self.btnAll.setIcon(self._get_icon('all.png'))
         self.btnAll.setIconSize(QSize(30, 30))
-        self.btnAll.setWhatsThis(self.tr("Convert all items to MapInfo TAB"))
-        self.btnAll.setStatusTip(self.tr("Convert all items to MapInfo TAB"))
+        self.btnAll.setWhatsThis(
+            self.tr("Convert all items to ") + self.out_type)
+        self.btnAll.setStatusTip(
+            self.tr("Convert all items to ") + self.out_type)
         self.btnAll.setDisabled(True)
 
         self.btnSelect.setIcon(self._get_icon('select.png'))
         self.btnSelect.setIconSize(QSize(30, 30))
         self.btnSelect.setWhatsThis(
-            self.tr("Convert selected items to MapInfo TAB"))
+            self.tr("Convert selected items to ") + self.out_type)
         self.btnSelect.setStatusTip(
-            self.tr("Convert selected items to MapInfo TAB"))
+            self.tr("Convert selected items to ") + self.out_type)
         self.btnSelect.setDisabled(True)
 
         self.btnCancel.setIcon(self._get_icon('cancel.png'))
@@ -86,16 +92,16 @@ class GpxTabDialog(_BASE, _FORM_CLASS):
             self, self.tr('Select folder with files GPX format'), '.'
         )
 
-        if path:
-            self.model.update(path)
+        if path and self.model.update(path):
             self.btnAll.setEnabled(True)
             self.btnSelect.setEnabled(True)
             self.label.setText(
-                self.tr('Select item or all items convert to MapInfo TAB')
+                self.tr('Select item or all items convert to ') + self.out_type
             )
 
     def _processing_all(self):
-        process = ProcessingGPXtoTAB(self.model.folder, self.gis_tools)
+        process = ProcessingGPX(self.model.folder, self.gis_tools,
+                                self.out_type, self.driver)
 
         data_list = []
         for item in self.model.rows_data():
@@ -115,7 +121,8 @@ class GpxTabDialog(_BASE, _FORM_CLASS):
         else:
             self.hide()
 
-            process = ProcessingGPXtoTAB(self.model.folder, self.gis_tools)
+            process = ProcessingGPX(self.model.folder, self.gis_tools,
+                                    self.out_type, self.driver)
             data_list = []
             for item in list(idx_list):
                 data_list.append(self.model.row_data(item))

@@ -3,12 +3,12 @@
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../gis_tools_gui/gis_tools_gpx_tab_dialog.ui" line="20"/>
+        <location filename="../gis_tools_gui/gis_tools_gpx_convert_dialog.ui" line="20"/>
         <source>Converting GPX to MapInfo TAB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gis_tools_gui/gis_tools_gpx_tab_dialog.ui" line="154"/>
+        <location filename="../gis_tools_gui/gis_tools_gpx_convert_dialog.ui" line="154"/>
         <source>Select folder with files GPX format</source>
         <translation type="unfinished"></translation>
     </message>
@@ -35,73 +35,78 @@
     </message>
 </context>
 <context>
-    <name>GpxTabDialog</name>
+    <name>GpxConvertDialog</name>
     <message>
-        <location filename="../gis_tools_gui/gis_tools_gpx_tab_dialog.py" line="51"/>
+        <location filename="../gis_tools_gui/gis_tools_gpx_convert_dialog.py" line="46"/>
+        <source>Converting GPX to </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gis_tools_gui/gis_tools_gpx_convert_dialog.py" line="55"/>
         <source>Select folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gis_tools_gui/gis_tools_gpx_tab_dialog.py" line="56"/>
-        <source>Convert all items to MapInfo TAB</source>
+        <location filename="../gis_tools_gui/gis_tools_gpx_convert_dialog.py" line="61"/>
+        <source>Convert all items to </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gis_tools_gui/gis_tools_gpx_tab_dialog.py" line="63"/>
-        <source>Convert selected items to MapInfo TAB</source>
+        <location filename="../gis_tools_gui/gis_tools_gpx_convert_dialog.py" line="69"/>
+        <source>Convert selected items to </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gis_tools_gui/gis_tools_gpx_tab_dialog.py" line="70"/>
+        <location filename="../gis_tools_gui/gis_tools_gpx_convert_dialog.py" line="76"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gis_tools_gui/gis_tools_gpx_tab_dialog.py" line="77"/>
+        <location filename="../gis_tools_gui/gis_tools_gpx_convert_dialog.py" line="83"/>
         <source>File name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gis_tools_gui/gis_tools_gpx_tab_dialog.py" line="85"/>
+        <location filename="../gis_tools_gui/gis_tools_gpx_convert_dialog.py" line="91"/>
         <source>Select folder with files GPX format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gis_tools_gui/gis_tools_gpx_tab_dialog.py" line="93"/>
-        <source>Select item or all items convert to MapInfo TAB</source>
+        <location filename="../gis_tools_gui/gis_tools_gpx_convert_dialog.py" line="98"/>
+        <source>Select item or all items convert to </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gis_tools_gui/gis_tools_gpx_tab_dialog.py" line="112"/>
+        <location filename="../gis_tools_gui/gis_tools_gpx_convert_dialog.py" line="118"/>
         <source>You must select at least one file from the list</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>ProcessingGPXtoTAB</name>
+    <name>ProcessingGPX</name>
     <message>
-        <location filename="../gis_tools_apps/gpx_to_tab/processing_gpx_to_tab.py" line="92"/>
-        <source>Handle GPX</source>
+        <location filename="../gis_tools_apps/gpx_convert/processing_gpx.py" line="76"/>
+        <source>complete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gis_tools_apps/gpx_to_tab/processing_gpx_to_tab.py" line="77"/>
+        <location filename="../gis_tools_apps/gpx_convert/processing_gpx.py" line="79"/>
         <source>Handle %s of %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gis_tools_apps/gpx_to_tab/processing_gpx_to_tab.py" line="99"/>
+        <location filename="../gis_tools_apps/gpx_convert/processing_gpx.py" line="94"/>
+        <source>Handle GPX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gis_tools_apps/gpx_convert/processing_gpx.py" line="101"/>
         <source>Handle complete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gis_tools_apps/gpx_to_tab/processing_gpx_to_tab.py" line="120"/>
+        <location filename="../gis_tools_apps/gpx_convert/processing_gpx.py" line="123"/>
         <source>Save to file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../gis_tools_apps/gpx_to_tab/processing_gpx_to_tab.py" line="74"/>
-        <source>complete</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
