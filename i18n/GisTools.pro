@@ -1,6 +1,6 @@
 FORMS           = ../gis_tools_gui/gis_tools_dockwidget_base.ui \
                   ../gis_tools_gui/gis_tools_gpx_convert_dialog.ui
-SOURCES         = ../gistools.py \
+SOURCES         = ../plugin.py \
                   ../gis_tools_gui/gis_tools_dockwidget.py \
                   ../gis_tools_gui/gis_tools_gpx_convert_dialog.py \
                   ../gis_tools_apps/gpx_convert/select_gpx_dialog.py \
